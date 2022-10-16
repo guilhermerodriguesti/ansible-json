@@ -4,7 +4,7 @@
    tasks:
      - name: Download JSON content play
        uri:
-         url: https://jsonplaceholder.typicode.com/users
+         url: https://raw.githubusercontent.com/guilhermerodriguesti/ansible-json/master/users.json
          return_content: yes
        register: jsoncontent
 

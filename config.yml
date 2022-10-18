@@ -1,5 +1,5 @@
 ---
-  - name: ReadJsonfile
+  - name: json read domain values
     hosts: localhost
     tasks:
       - name: Display the JSON file content

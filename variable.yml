@@ -1,5 +1,5 @@
 ---
-- name: json read demo
+- name: json read value
   hosts: localhost
   tasks:
     - name: Register JSON output as a variable

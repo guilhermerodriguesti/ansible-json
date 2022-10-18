@@ -1,5 +1,5 @@
 ---
-- name: json read demo
+- name: json read server name
   hosts: localhost
   tasks:
     - name: Register JSON output as a variable
@@ -8,6 +8,7 @@
     - name: save the Json data to a Variable as a Fact
       set_fact:
         jsondata: "{{ result.stdout | from_json }}"
+
     - name: setDomainName
       set_fact:
         domain_name: "{{ jsondata | json_query(jmesquery) }}"

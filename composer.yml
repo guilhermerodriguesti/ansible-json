@@ -1,0 +1,20 @@
+---
+- name: json read version
+  hosts: localhost
+  tasks:
+    - name: Register JSON output as a variable
+      ansible.builtin.shell: cat composer.json
+      register: result
+
+    - name: Save the Json data to a Variable as a Fact
+      set_fact:
+        jsondata: "{{ result.stdout | from_json }}"
+
+    - name: setVersion
+      set_fact:
+        version: "{{ jsondata | json_query(jmesquery) }}"
+      vars:
+        jmesquery: 'version'
+
+    - name: Print Version
+      debug: msg="Version => {{ version }}"

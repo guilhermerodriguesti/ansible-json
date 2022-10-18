@@ -1,5 +1,5 @@
 ---
-- name: json read demo
+- name: json read age
   hosts: localhost
   vars:
     jsondata: "{{ lookup('file', 'age.json') | from_json }}"

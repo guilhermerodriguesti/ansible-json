@@ -1,0 +1,27 @@
+---
+- name: json read demo
+  hosts: localhost
+  tasks:
+    - name: Register JSON output as a variable
+      ansible.builtin.shell: cat domain.json
+      register: result
+    - name: save the Json data to a Variable as a Fact
+      set_fact:
+        jsondata: "{{ result.stdout | from_json }}"
+    - name: setDomainName
+      set_fact:
+        domain_name: "{{ jsondata | json_query(jmesquery) }}"
+      vars:
+        jmesquery: 'domain.name'
+
+    - name: Print DomainName
+      debug: msg="DomainName => {{ domain_name }}"
+
+    - name: setServerName
+      set_fact:  
+        servername:  "{{ jsondata | json_query(jmesquery) }}"
+      vars:
+        jmesquery: 'domain.admin.servername'
+
+    - name: Print ServerName
+      debug: msg="ServerName => {{ servername }}"

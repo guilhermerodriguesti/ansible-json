@@ -1,0 +1,9 @@
+---
+- name: json read demo
+  hosts: localhost
+  vars:
+    jsondata: "{{ lookup('file', 'age.json') | from_json }}"
+  tasks:
+    - name: Print variable
+      ansible.builtin.debug:
+        var: jsondata

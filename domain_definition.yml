@@ -1,0 +1,16 @@
+---
+- hosts: localhost
+  vars:
+    jsondata: "{{ lookup('file', 'domain_definition.json') | from_json }}"
+  tasks:
+
+  - name: Print variables
+    ansible.builtin.debug:
+      var: jsondata
+  - name: Display all ports from cluster1 as a string
+    ansible.builtin.debug:
+      msg: "{{ domain_definition | community.general.json_query('domain.server[?cluster==`cluster1`].port') | join(', ') }}"
+  - name: Display all server names
+    ansible.builtin.debug:
+      var: jsondata
+    loop: "{{ domain_definition | community.general.json_query('domain.server[*].name') }}"

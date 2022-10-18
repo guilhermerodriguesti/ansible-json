@@ -4,7 +4,7 @@
    tasks:
      - name: Download JSON content play
        uri:
-         url: https://raw.githubusercontent.com/guilhermerodriguesti/ansible-json/master/users
+         url: https://jsonplaceholder.typicode.com/users
          return_content: yes
        register: jsoncontent
 
@@ -13,3 +13,22 @@
        debug: msg="{{ jsoncontent.json | json_query(jmesquery) }}"
        vars:
          jmesquery: "[*].{Name: name, Email: email, Phone: phone, CompanyName: company.name, WebSite: website, City: address.city}"
+         
+     - name: Just the Names
+       debug: msg="{{ jsoncontent.json | json_query(jmesquery)}}"
+       vars:
+         jmesquery: "[*].name"
+
+     - name: Business Card
+       debug: msg="{{ jsoncontent.json | json_query(jmesquery)}}"
+       vars:
+         jmesquery: "[? name==`Leanne Graham`].{Name: name, Email: email, Phone: phone, CompanyName: company.name, WebSite: website, City: address.city}"
+
+     - name: Collecting UserName and Mobile Number info
+       no_log: True
+       set_fact:
+         phonebook: "{{phonebook|default({}) | combine ( {item.name : item.phone}) }}"
+       with_items: "{{ jsoncontent.json | json_query('[*]')}}"
+
+     - name: The Phonebook
+       debug: var=phonebook

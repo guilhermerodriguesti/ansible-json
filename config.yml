@@ -1,0 +1,66 @@
+---
+  - name: ReadJsonfile
+    hosts: localhost
+    tasks:
+      - name: Display the JSON file content
+        shell: cat config.json
+        register: result
+
+      - name: save the Json data to a Variable as a Fact
+        set_fact:
+          jsondata: "{{ result.stdout | from_json }}"
+
+      - name: setDomainName
+        set_fact:
+          domain_name: "{{ jsondata | json_query(jmesquery) }}"
+        vars:
+          jmesquery: 'domain.name'
+
+      - name: setDomainUsername
+        set_fact:
+          domain_username: "{{ jsondata | json_query(jmesquery) }}"
+        vars:
+          jmesquery: 'domain.user'
+
+      - name: setDomainPassword
+        set_fact:
+          domain_password: "{{ jsondata | json_query(jmesquery) }}"
+        vars:
+          jmesquery: 'domain.password'
+
+      - name: setadmin_Listenport
+        set_fact:
+          admin_ListenPort: "{{ jsondata | json_query(jmesquery) }}"
+        vars:
+          jmesquery: 'domain.admin.listenport'
+
+      - name: Debug the values
+        debug: msg=" Admin Listen Port => {{ admin_ListenPort }}, DomainName => {{ domain_name }}, DomainUserName => {{ domain_username }} , Domain Password => {{ domain_password }}"
+      
+      - name: DomainName
+        debug: msg="DomainName => {{ domain_name }}"
+      #       
+      #  
+      - name: Server Names
+        set_fact:  
+          servernames:  "{{ jsondata | json_query(jmesquery) }}"
+        vars:
+          jmesquery: '*.servers[*].name'
+      
+      - name: Server Names and Ports
+        set_fact:  
+          serverinfo:  "{{ jsondata | json_query(jmesquery) }}"
+        vars:
+          jmesquery: '*.servers[*].[name, port]'
+      
+      - name: Print all server names
+        debug: 
+          msg: "{{ item}}"
+        with_items: 
+          - "{{ servernames }}"
+
+      - name: Print all server names
+        debug: 
+          msg: "{{ item }}"
+        with_items: 
+        - "{{ serverinfo }}"
